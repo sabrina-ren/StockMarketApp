@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="large-12 columns">
+        <nav class="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name"></li>
+            </ul>
+            <section class="top-bar-section">
+                <ul class="left">
+                    <li><a href="#" {{action 'sortByVolume'}}>Most Active By Volume</a></li>
+                    <li><a href="#" {{action 'sortByGainers'}}>Gainers</a></li>
+                    <li><a href="#" {{action 'sortByLosers'}}>Losers</a></li>
+                </ul>
+            </section>
+        </nav>
+
+        <table role="grid" summary="Summary of stocks by company">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Open Price</th>
+                    <th>Last Sale</th>
+                    <th>Change Net - %</th>
+                    <th>Share Volume</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each company in controller}}
+                    <tr>
+                        <td>{{company.name}}</td>
+                        <td class="text-center">{{company.openPrice}}</td>
+                        <td class="text-center">{{company.lastSale}}</td>
+                        <td class="text-center">{{company.changeNet}}
+                            <img {{bind-attr src=company.changeIconName}} alt="changeIcon">
+                            {{company.changePercentage}}
+                        </td>
+                        <td class="text-center">{{company.shareVolume}}</td>
+                        <td class="text-center">
+                            <div class="button-bar"></div>
+                                <ul class="button-group round">
+                                    <li><a href="#" class="tiny button secondary">Buy</a></li>
+                                    <li><a href="#" class="tiny button secondary">Sell</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

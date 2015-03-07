@@ -3,6 +3,7 @@
 <head>
     <title>Stock Market</title>
     <link rel="stylesheet" href="CSS/foundation.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
 
     <script src="libs/jquery-1.11.2.min.js"></script>
     <script src="libs/handlebars-v2.0.0.js"></script>
@@ -15,9 +16,22 @@
     <script src="stockMarket.js"></script>
     <script src="router.js"></script>
 
+    <script src="controllers/stockSummary.js"></script>
+    <script src="controllers/bid.js"></script>
+    <script src="controllers/sell.js"></script>
+
+    <script src="models/company.js"></script>
+    <script src="models/buyOrder.js"></script>
+    <script src="models/sellOrder.js"></script>
+    <script src="companyData.js"></script>
+
+    <script src="routes/stockSummary.js"></script>
+    <script src="routes/bid.js"></script>
+    <script src="routes/sell.js"></script>
+
     <script>
         EmberHandlebarsLoader.loadTemplates([
-                'application', 'summary', 'marketByOrder', 'marketByPrice', 'placeBid', 'placeSale'
+                'application', 'stockSummary'
         ]);
     </script>
 </head>

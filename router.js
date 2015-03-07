@@ -1,5 +1,5 @@
 StockMarket.Router.map(function() {
-    this.resource('summary', {path: '/'}, function(){
+    this.resource('stockSummary', {path: '/'}, function(){
         this.resource('company');
         this.resource('marketByOrder');
         this.resource('marketByPrice');
