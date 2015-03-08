@@ -2,6 +2,15 @@ table {
     width:100%
 }
 
-td {
-    text-align: center;
+form label {
+    font-size: large;
+    font-weight: normal;
+}
+
+.form-group {
+    padding-top: 40px;
+}
+
+.footer {
+    padding: 60px;
 }

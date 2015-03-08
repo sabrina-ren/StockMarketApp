@@ -1,19 +1,26 @@
 <div class="row">
-    <div class="large-12 columns">
-        <nav class="top-bar" data-topbar role="navigation">
-            <ul class="title-area">
-                <li class="name"></li>
-            </ul>
-            <section class="top-bar-section">
-                <ul class="left">
+    <div class="col-md-12">
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cm-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Stock Market</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="cm-navbar-collapse">
+                <ul class="nav navbar-nav">
                     <li><a href="#" {{action 'sortByVolume'}}>Most Active By Volume</a></li>
                     <li><a href="#" {{action 'sortByGainers'}}>Gainers</a></li>
                     <li><a href="#" {{action 'sortByLosers'}}>Losers</a></li>
                 </ul>
-            </section>
+            </div>
         </nav>
 
-        <table role="grid" summary="Summary of stocks by company">
+        <table class="table table-hover row-clickable" summary="Summary of stocks by company">
             <thead>
                 <tr>
                     <th>Company</th>
@@ -26,26 +33,41 @@
             </thead>
             <tbody>
                 {{#each company in controller}}
-                    <tr>
-                        <td>{{company.name}}</td>
-                        <td class="text-center">{{company.openPrice}}</td>
-                        <td class="text-center">{{company.lastSale}}</td>
-                        <td class="text-center">{{company.changeNet}}
+
+                    <tr class="">
+                        <td><a href="">{{#link-to 'bid'}}{{company.name}}{{/link-to}}</a></td>
+                        <td><a href="">{{company.openPrice}}</a></td>
+                        <td><a href="">{{company.lastSale}}</a></td>
+                        <td><a href=#">{{company.changeNet}}
                             <img {{bind-attr src=company.changeIconName}} alt="changeIcon">
                             {{company.changePercentage}}
+                            </a>
                         </td>
-                        <td class="text-center">{{company.shareVolume}}</td>
-                        <td class="text-center">
-                            <div class="button-bar"></div>
-                                <ul class="button-group round">
-                                    <li><a href="#" class="tiny button secondary">Buy</a></li>
-                                    <li><a href="#" class="tiny button secondary">Sell</a></li>
-                                </ul>
+                        <td><a href="#">{{company.shareVolume}}</a></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default">{{#link-to 'bid' company.id}}Buy{{/link-to}}</button>
+                                <button type="button" class="btn btn-default">{{#link-to 'offer' company.id}}Sell{{/link-to}}</button>
                             </div>
                         </td>
                     </tr>
+
                 {{/each}}
             </tbody>
         </table>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-2">
+        <h2>{{company.name}}</h2>
+        <img {{bind-attr src=company.logoURL}} alt="logo">
+    </div>
+    <div class="col-md-4">
+        {{partial "marketByOrder"}}
+    </div>
+    <div class="col-md-6">
+        {{partial "marketByPrice"}}
+    </div>
+</div>
+<br>
+<br>

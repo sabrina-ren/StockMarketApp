@@ -4,6 +4,6 @@ StockMarket.Router.map(function() {
         this.resource('marketByOrder');
         this.resource('marketByPrice');
     });
-    this.route('bid', {path: 'bid/:company'});
-    this.route('sell', {path: 'sell/:company'});
+    this.route('bid', {path: 'bid/:company_id'});
+    this.route('offer', {path: 'offer/:company_id'});
 })

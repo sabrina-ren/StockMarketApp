@@ -4,6 +4,7 @@
 
 StockMarket.Company = DS.Model.extend({
     name: DS.attr('string'),
+    logoURL: DS.attr('string'),
     openPrice: DS.attr('number'),
     lastSale: DS.attr('number', {
         defaultValue: function() { return 42.59; }
@@ -11,8 +12,8 @@ StockMarket.Company = DS.Model.extend({
     shareVolume: DS.attr('number', {
         defaultValue: function() { return 0; }
     }),
-    sellOrders: DS.hasMany('sellOrder'),
-    buyOrders: DS.hasMany('buyOrder'),
+    offers: DS.hasMany('offer'),
+    bids: DS.hasMany('bid'),
 
     changeNet: function() {
         return (this.get('lastSale') - this.get('openPrice')).toFixed(2);
