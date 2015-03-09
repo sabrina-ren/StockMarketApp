@@ -2,25 +2,17 @@
     <div class="col-md-12">
         <nav class="navbar navbar-inverse" role="navigation">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cm-navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Stock Market</a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="cm-navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="#" {{action 'sortByVolume'}}>Most Active By Volume</a></li>
-                    <li><a href="#" {{action 'sortByGainers'}}>Gainers</a></li>
-                    <li><a href="#" {{action 'sortByLosers'}}>Losers</a></li>
-                </ul>
+                <a class="navbar-brand" href="#">Stock State Summary</a>
             </div>
         </nav>
 
-        <table class="table table-hover row-clickable" summary="Summary of stocks by company">
+        <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-default" {{action 'sortByVolume'}}>Most Active by Volume</button>
+            <button type="button" class="btn btn-default" {{action 'sortByGainers'}}>Gainers</button>
+            <button type="button" class="btn btn-default" {{action 'sortByLosers'}}>Losers</button>
+        </div>
+
+        <table class="table table-hover table-bordered row-clickable" summary="Summary of stocks by company">
             <thead>
                 <tr>
                     <th>Company</th>
