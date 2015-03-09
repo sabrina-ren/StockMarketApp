@@ -5,16 +5,24 @@
 StockMarket.OfferController = Ember.Controller.extend({
     actions: {
         submit: function(){
-            // TODO: Check for matching bids and offers
             var route = this;
-
-            var newOffer = this.store.createRecord('offer', {
-                company: this.get('model'),
-                volume: this.get('inputVolume'),
-                price: this.get('inputPrice')
+            var matchingBid = this.get('model').get('bids').find(function(bid) {
+                return (bid.get('volume') == route.get('inputVolume') && bid.get('price') == route.get('inputPrice'));
             });
-            newOffer.save();
+            if (matchingBid) {
+                matchingBid.destroyRecord();
+                alert('Found a match!');
+            } else {
+                var newOffer = this.store.createRecord('offer', {
+                    company: this.get('model'),
+                    volume: this.get('inputVolume'),
+                    price: this.get('inputPrice')
+                });
+                newOffer.save();
+            }
             route.transitionToRoute('stockSummary');
+            this.set('inputVolume', '');
+            this.set('inputPrice', '');
         },
         cancel: function(){
             this.transitionToRoute('stockSummary');
