@@ -1,1 +1,31 @@
 <h4>Market by Price</h4>
+
+<table class="table" summary="Selected company market by price">
+    <thead>
+    <tr>
+        <th colspan="2">Buy</th>
+        <th colspan="2">Sell</th>
+    </tr>
+    <tr>
+        <th>#</th>
+        <th>Volume</th>
+        <th>Price</th>
+        <th>Price</th>
+        <th>Volume</th>
+        <th>#</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {{#each line in sortedOrders}}
+        <tr>
+            <td>&nbsp{{line.bidNum}}</td>
+            <td>{{line.bidVolume}}</td>
+            <td>{{line.bidPrice}}</td>
+            <td>{{line.sellPrice}}</td>
+            <td>{{line.sellVolume}}</td>
+            <td>{{line.sellNum}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>

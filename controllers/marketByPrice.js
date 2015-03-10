@@ -1,13 +1,12 @@
 /**
  * Created by CONNOR FRASER on 10/03/2015.
  */
-StockMarket.MarketByOrderController = Ember.Controller.extend({
-    needs:['company'],
+StockMarket.MarketByPriceController = Ember.Controller.extend({
     sortedOrders: [],
     sortingBids: function() {
         var sortedBids = this.get('model').get('bids').sortBy('price');
         var sortedOffers = this.get('model').get('offers').sortBy('price');
-        
+
         var sortedOrders = [];
         for (i=0; i <= 10; i++) {
             var newOrder = {};
@@ -23,4 +22,4 @@ StockMarket.MarketByOrderController = Ember.Controller.extend({
         }
         this.set('sortedOrders', sortedOrders);
     }.observes('model').on('init')
-});
+})
