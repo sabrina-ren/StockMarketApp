@@ -3,18 +3,13 @@
 </div>
 
 <div class="row">
-        {{partial "marketByOrder"}}
-</div>
-
-
-
     <div class="col-md-4">
-        {{partial "marketByPrice"}}
+        {{render "marketByOrder" model}}
     </div>
 
-
-
-
+    <div class="col-md-4">
+        {{render "marketByPrice" model}}
+    </div>
 
     <div class="col-md-4">
         <img {{bind-attr src=model.logoURL}} alt="logo">
