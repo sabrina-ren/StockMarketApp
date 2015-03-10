@@ -23,7 +23,7 @@
                 {{#each company in controller}}
 
                     <tr class="">
-                        <td><a href="">{{#link-to 'bid'}}{{company.name}}{{/link-to}}</a></td>
+                        <td><a href="">{{#link-to 'company' company.id}}{{company.name}}{{/link-to}}</a></td>
                         <td><a href="">{{company.openPrice}}</a></td>
                         <td><a href="">{{company.lastSale}}</a></td>
                         <td><a href=#">{{company.changeNet}}
@@ -46,15 +46,8 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-2">
-        <h2>{{company.name}}</h2>
-        <img {{bind-attr src=company.logoURL}} alt="logo">
-    </div>
-    <div class="col-md-4">
-        {{partial "marketByOrder"}}
-    </div>
-    <div class="col-md-6">
-        {{partial "marketByPrice"}}
+    <div class="col-md-12">
+        {{outlet}}
     </div>
 </div>
 <br>

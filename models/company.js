@@ -12,14 +12,14 @@ StockMarket.Company = DS.Model.extend({
     shareVolume: DS.attr('number', {
         defaultValue: function() { return 0; }
     }),
-    offers: DS.hasMany('offer'),
-    bids: DS.hasMany('bid'),
+    offers: DS.hasMany('offer', {async:true}),
+    bids: DS.hasMany('bid', {async:true}),
 
     changeNet: function() {
         return (this.get('lastSale') - this.get('openPrice')).toFixed(2);
     }.property('openPrice', 'lastSale'),
     changePercentage: function() {
-        return (this.get('changeNet') / this.get('openPrice')).toFixed(2) + '%';
+        return ((this.get('changeNet') / this.get('openPrice'))*100).toFixed(2) + '%';
     }.property('openPrice', 'lastSale', 'changeNet'),
 
     // TODO: change this into a Handlebars helper

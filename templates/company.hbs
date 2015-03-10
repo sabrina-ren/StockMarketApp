@@ -1,0 +1,22 @@
+<div class="page-header">
+    <h2><small>&nbsp<strong>{{model.name}}</strong></small></h2>
+</div>
+
+<div class="row">
+        {{partial "marketByOrder"}}
+</div>
+
+
+
+    <div class="col-md-4">
+        {{partial "marketByPrice"}}
+    </div>
+
+
+
+
+
+    <div class="col-md-4">
+        <img {{bind-attr src=model.logoURL}} alt="logo">
+    </div>
+</div>

@@ -1,4 +1,4 @@
-/**
+  /**
  * Created by sabrinaren on 15-03-08.
  */
 
@@ -11,7 +11,9 @@ StockMarket.BidController = Ember.Controller.extend({
             });
             if (matchingOffer) {
                 matchingOffer.destroyRecord();
-                alert('Found a match!');
+
+                this.get('model').set('lastSale', route.get('inputPrice'));
+                this.get('model').set('shareVolume', route.get('inputVolume'));
             } else {
                 var newBid = this.store.createRecord('bid', {
                     company: this.get('model'),

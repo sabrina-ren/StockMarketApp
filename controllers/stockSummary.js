@@ -5,6 +5,7 @@
 StockMarket.StockSummaryController = Ember.ArrayController.extend({
     sortProperties: ['name'],
     sortAscending: true,
+
     actions: {
         // TODO: Fix sorting bug where properties are changed but table doesn't update
         sortByVolume: function(){

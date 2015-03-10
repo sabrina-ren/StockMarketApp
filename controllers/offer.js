@@ -11,7 +11,9 @@ StockMarket.OfferController = Ember.Controller.extend({
             });
             if (matchingBid) {
                 matchingBid.destroyRecord();
-                alert('Found a match!');
+
+                this.get('model').set('lastSale', route.get('inputPrice'));
+                this.get('model').set('shareVolume', route.get('inputVolume'));
             } else {
                 var newOffer = this.store.createRecord('offer', {
                     company: this.get('model'),
