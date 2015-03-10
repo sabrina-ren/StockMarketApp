@@ -17,8 +17,8 @@ StockMarket.BidController = Ember.Controller.extend({
             } else {
                 var newBid = this.store.createRecord('bid', {
                     company: this.get('model'),
-                    volume: this.get('inputVolume'),
-                    price: this.get('inputPrice')
+                    volume: parseFloat(this.get('inputVolume')),
+                    price: parseFloat(this.get('inputPrice'))
                 });
                 newBid.save();
             }

@@ -3,15 +3,24 @@
  */
 StockMarket.MarketByOrderController = Ember.Controller.extend({
     needs:['company'],
-    sortedBids: [],
+    sortedOrders: [],
     sortingBids: function() {
-        this.set('sortedBids', this.get('model').get('bids'));
-        alert('changed!');
-    }.observes('bids').on('init')
+        var sortedBids = this.get('model').get('bids').sortBy('price');
+        var sortedOffers = this.get('model').get('offers').sortBy('price');
 
-    //sortedBids: function(){
-    //    return model.get('bids').sort(function(obj1, obj2){
-    //       return parseFloat(obj2.get('price')) - parseFloat(obj1.get('price'));
-    //    });
-    //}.property(model.get('bids'))
+        var sortedOrders = [];
+        for (i=0; i < 10; i++) {
+            var newOrder = {};
+            if (sortedBids.length > i) {
+                newOrder.bidVolume = sortedBids.objectAt(i).get('volume');
+                newOrder.bidPrice = sortedBids.objectAt(i).get('price');
+            }
+            if (sortedOffers.length > i) {
+                newOrder.sellVolume = sortedOffers.objectAt(sortedOffers.length - 1 - i).get('volume');
+                newOrder.sellPrice = sortedOffers.objectAt(sortedOffers.length - 1 - i).get('price');
+            }
+            sortedOrders.addObject(newOrder);
+        }
+        this.set('sortedOrders', sortedOrders);
+    }.observes('bids', 'model').on('init')
 });

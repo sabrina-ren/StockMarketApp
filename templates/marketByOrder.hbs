@@ -9,16 +9,18 @@
     <tr>
         <th>Volume</th>
         <th>Price</th>
-        <th>Volume</th>
         <th>Price</th>
+        <th>Volume</th>
     </tr>
     </thead>
     <tbody>
 
-    {{#each bid in sortedBids}}
+    {{#each line in sortedOrders}}
             <tr>
-                <td>{{bid.volume}}</td>
-                <td>{{bid.price}}</td>
+                <td>&nbsp{{line.bidVolume}}</td>
+                <td> {{line.bidPrice}}</td>
+                <td> {{line.sellPrice}}</td>
+                <td> {{line.sellVolume}}</td>
             </tr>
     {{/each}}
     </tbody>
