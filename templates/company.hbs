@@ -7,8 +7,14 @@
         {{render "marketByOrder" model}}
     </div>
 
-    <div class="col-md-4">
-        {{render "marketByPrice" model}}
+
+    <h4>Market By Price</h4>
+    <div class="col-md-2">
+        {{render "marketByPriceBids" model.bids}}
+    </div>
+
+    <div class="col-md-2">
+        {{render "marketByPriceOffers" model.offers}}
     </div>
 
     <div class="col-md-4">
