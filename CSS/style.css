@@ -11,3 +11,30 @@ form label {
 .footer {
     padding: 60px;
 }
+
+
+table.tableSection {
+    display: table;
+    width: 100%;
+}
+table.tableSection thead {
+    float: left;
+    width: 98%;
+}
+
+table.tableSection tbody {
+    float: left;
+    width: 100%;
+}
+table.tableSection tbody {
+    overflow: auto;
+    height: 200px;
+}
+table.tableSection tr {
+    width: 100%;
+    display: table;
+    text-align: left;
+}
+table.tableSection th, table.tableSection td {
+    width: 20%;
+}

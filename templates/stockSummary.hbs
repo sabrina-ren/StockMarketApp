@@ -8,7 +8,7 @@
             <button type="button" class="btn btn-default" {{action 'sortByLosers'}}>Losers</button>
         </div>
 
-        <table class="table table-hover table-bordered row-clickable" summary="Summary of stocks by company">
+        <table class="table table-hover table-bordered row-clickable tableSection" summary="Summary of stocks by company">
             <thead>
                 <tr>
                     <th>Company</th>
@@ -16,7 +16,7 @@
                     <th>Last Sale</th>
                     <th>Change Net - %</th>
                     <th>Share Volume</th>
-                    <th> </th>
+                    <th>Order</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +39,6 @@
                             </div>
                         </td>
                     </tr>
-
                 {{/each}}
             </tbody>
         </table>
