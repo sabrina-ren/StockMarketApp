@@ -4,7 +4,7 @@
 StockMarket.MarketByPriceController = Ember.Controller.extend({
     sortedOrders: [],
     sortingBids: function() {
-        var sortedBids = this.get('model').get('bids').sortBy('price');
+        var sortedBids = this.get('model').get('bids').sortBy('price').reverse();
         var sortedOffers = this.get('model').get('offers').sortBy('price');
         var sortedOrders = [];
         var size = 10;

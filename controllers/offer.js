@@ -5,27 +5,43 @@
 StockMarket.OfferController = Ember.Controller.extend({
     actions: {
         submit: function(){
-            var route = this;
-            var matchingBid = this.get('model').get('bids').find(function(bid) {
-                return (bid.get('volume') == route.get('inputVolume') && bid.get('price') == route.get('inputPrice'));
-            });
-            if (matchingBid) {
-                matchingBid.destroyRecord();
+            var price = parseFloat(this.get('inputPrice'));
+            var volume = parseFloat(this.get('inputVolume'));
 
-                this.get('model').set('lastSale', route.get('inputPrice'));
-                this.get('model').set('shareVolume', this.get('model').get('shareVolume') + parseFloat(route.get('inputVolume')));
-
+            // Validate input
+            if (isNaN(price) || isNaN(volume)) {
+                alert('Please enter a numeric value');
+            } else if (price <= 0 || volume <= 0) {
+                alert('Please enter a valid number above 0');
             } else {
-                var newOffer = this.store.createRecord('offer', {
-                    company: this.get('model'),
-                    volume: parseFloat(this.get('inputVolume')),
-                    price: parseFloat(this.get('inputPrice'))
+                var matchingBid = this.get('model').get('bids').find(function (bid) {
+                    return (bid.get('volume') == volume && bid.get('price') == price);
                 });
-                newOffer.save();
+
+                // If a matching bid was found, make the transaction
+                if (matchingBid) {
+                    matchingBid.destroyRecord();
+
+                    this.get('model').set('lastSale', price);
+                    this.get('model').set('shareVolume', this.get('model').get('shareVolume') + volume);
+                    alert('A matching bid was found.');
+                }
+                // If no matching bids were found, save this offer
+                else {
+                    var newOffer = this.store.createRecord('offer', {
+                        company: this.get('model'),
+                        volume: volume,
+                        price: price
+                    });
+                    newOffer.save();
+                }
+                // Go back to the correct company page
+                this.transitionToRoute('company', this.get('model'));
+
+                // Clear the form
+                this.set('inputVolume', '');
+                this.set('inputPrice', '');
             }
-            this.transitionToRoute('company', this.get('model'));
-            this.set('inputVolume', '');
-            this.set('inputPrice', '');
         },
         cancel: function(){
             this.transitionToRoute('company', this.get('model'));

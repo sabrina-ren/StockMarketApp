@@ -8,7 +8,7 @@
             <button type="button" class="btn btn-default" {{action 'sortByLosers'}}>Losers</button>
         </div>
 
-        <table class="table table-hover table-bordered row-clickable tableSection" summary="Summary of stocks by company">
+        <table class="table table-hover table-bordered" summary="Summary of stocks by company" id="summary-table">
             <thead>
                 <tr>
                     <th>Company</th>
@@ -23,15 +23,15 @@
                 {{#each company in controller}}
 
                     <tr class="">
-                        <td><a href="">{{#link-to 'company' company.id}}{{company.name}}{{/link-to}}</a></td>
-                        <td><a href="">{{company.openPrice}}</a></td>
-                        <td><a href="">{{company.lastSale}}</a></td>
-                        <td><a href=#">{{company.changeNet}}
+                        <td>{{#link-to 'company' company.id tagName="a"}}{{company.name}}{{/link-to}}</td>
+                        <td>{{#link-to 'company' company.id tagName="a"}}{{company.openPrice}}{{/link-to}}</td>
+                        <td>{{#link-to 'company' company.id tagName="a"}}{{company.lastSale}}{{/link-to}}</td>
+                        <td>{{#link-to 'company' company.id tagName="a"}}{{company.changeNet}}
                             <img {{bind-attr src=company.changeIconName}} alt="changeIcon">
                             {{company.changePercentage}}
-                            </a>
-                        </td>
-                        <td><a href="#">{{company.shareVolume}}</a></td>
+                        {{/link-to}}</td>
+                        <td>{{#link-to 'company' company.id tagName="a"}}{{company.shareVolume}}{{/link-to}}</td>
+
                         <td>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-default">{{#link-to 'bid' company.id}}Buy{{/link-to}}</button>

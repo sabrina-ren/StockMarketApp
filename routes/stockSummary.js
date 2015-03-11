@@ -7,6 +7,7 @@ StockMarket.StockSummaryRoute = Ember.Route.extend({
     }
 });
 
+// Redirect to the first company as default if none are specified
 StockMarket.StockSummaryIndexRoute = Ember.Route.extend({
     afterModel: function(companies, transition) {
         this.transitionTo('company', companies.get('firstObject'));

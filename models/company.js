@@ -22,7 +22,6 @@ StockMarket.Company = DS.Model.extend({
         return ((this.get('changeNet') / this.get('openPrice'))*100).toFixed(2) + '%';
     }.property('openPrice', 'lastSale', 'changeNet'),
 
-    // TODO: change this into a Handlebars helper
     changeIconName: function() {
         var change = this.get('changeNet');
         if (change > 0) return 'assets/up.png';
