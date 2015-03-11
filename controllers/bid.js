@@ -13,7 +13,7 @@ StockMarket.BidController = Ember.Controller.extend({
                 matchingOffer.destroyRecord();
 
                 this.get('model').set('lastSale', route.get('inputPrice'));
-                this.get('model').set('shareVolume', route.get('inputVolume'));
+                this.get('model').set('shareVolume', this.get('model').get('shareVolume') + parseFloat(route.get('inputVolume')));
             } else {
                 var newBid = this.store.createRecord('bid', {
                     company: this.get('model'),
@@ -22,12 +22,12 @@ StockMarket.BidController = Ember.Controller.extend({
                 });
                 newBid.save();
             }
-            route.transitionToRoute('stockSummary');
+            route.transitionToRoute('company', this.get('model'));
             this.set('inputVolume', '');
             this.set('inputPrice', '');
         },
         cancel: function(){
-            this.transitionToRoute('stockSummary');
+            this.transitionToRoute('company', this.get('model'));
         }
     }
 });

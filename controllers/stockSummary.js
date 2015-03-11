@@ -12,20 +12,16 @@ StockMarket.StockSummaryController = Ember.ArrayController.extend({
             }
         },
         sortByGainers: function(){
-            if (!((this.get('sortProperties') == 'changeNet') && (this.get('sortAscending') == true))) {
-                this.set('sortProperties', ['changeNet']);
-                this.set('sortAscending', true);
-            }
-        },
-        sortByLosers: function(){
             if (!((this.get('sortProperties') == 'changeNet') && (this.get('sortAscending') == false))) {
                 this.set('sortProperties', ['changeNet']);
                 this.set('sortAscending', false);
             }
         },
-
-        testing: function(){
-            alert('hello');
+        sortByLosers: function(){
+            if (!((this.get('sortProperties') == 'changeNet') && (this.get('sortAscending') == true))) {
+                this.set('sortProperties', ['changeNet']);
+                this.set('sortAscending', true);
+            }
         }
     }
 });

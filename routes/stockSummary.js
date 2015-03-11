@@ -6,7 +6,9 @@ StockMarket.StockSummaryRoute = Ember.Route.extend({
         return this.store.find('company');
     },
     afterModel: function(companies, transition) {
-        if (companies.get('length') > 1) {
+        console.log(transition);
+
+        if (companies.get('length') > 1 && transition.targetName == 'stockSummary.index') {
             this.transitionTo('company', companies.get('firstObject'));
         }
     }

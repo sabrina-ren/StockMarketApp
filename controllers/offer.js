@@ -13,21 +13,22 @@ StockMarket.OfferController = Ember.Controller.extend({
                 matchingBid.destroyRecord();
 
                 this.get('model').set('lastSale', route.get('inputPrice'));
-                this.get('model').set('shareVolume', route.get('inputVolume'));
+                this.get('model').set('shareVolume', this.get('model').get('shareVolume') + parseFloat(route.get('inputVolume')));
+
             } else {
                 var newOffer = this.store.createRecord('offer', {
                     company: this.get('model'),
-                    volume: this.get('inputVolume'),
-                    price: this.get('inputPrice')
+                    volume: parseFloat(this.get('inputVolume')),
+                    price: parseFloat(this.get('inputPrice'))
                 });
                 newOffer.save();
             }
-            route.transitionToRoute('stockSummary');
+            this.transitionToRoute('company', this.get('model'));
             this.set('inputVolume', '');
             this.set('inputPrice', '');
         },
         cancel: function(){
-            this.transitionToRoute('stockSummary');
+            this.transitionToRoute('company', this.get('model'));
         }
     }
 });
