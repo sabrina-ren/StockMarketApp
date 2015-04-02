@@ -62,6 +62,21 @@ app.post('/transactions', function(request, response){
 
 app.put('/companies/:company_id', function(request, response){
     //update a company with new info
+    Companies.findOne(
+        {_id: request.params.company_id}, function(error, company) {
+            if (error) response.send(error);
+
+            // Update every attribute
+            for (var key in request.body.company) {
+                company[key] = request.body.company[key];
+            }
+
+            company.save(function(error) {
+                if (error) response.send(error);
+                response.status(201).json({companies: company});
+            });
+        }
+    );
 });
 
 app.delete('/buyOrders/:buyOrder_id', function(request, response){
