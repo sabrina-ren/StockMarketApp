@@ -54,8 +54,6 @@ app.get('/companies', function (request, response) {
 app.get('/buyOrders', function(request, response){
     BuyOrders.find(function (error, docs) {
         if (error) response.send(error);
-        console.log("buyOrders: "+ docs);
-
         response.json({buyOrders:docs});
     });
 });
@@ -63,8 +61,6 @@ app.get('/buyOrders', function(request, response){
 app.get('/saleOrders', function(request, response){
     SaleOrders.find(function (error, docs) {
         if (error) response.send(error);
-        console.log("saleOrders: "+ docs);
-
         response.json({saleOrders:docs});
     });
 });
@@ -75,7 +71,6 @@ app.post('/companies', function(request, response){
 
 
 app.post('/buyOrders', function(request, response){
-    console.log("get buy orders: " + JSON.stringify(request.body));
     var order = new BuyOrders({
         timeStamp: request.body.buyOrder.timeStamp,
         size: request.body.buyOrder.size,
@@ -89,7 +84,6 @@ app.post('/buyOrders', function(request, response){
 });
 
 app.post('/saleOrders', function(request, response){
-    console.log("get sale orders: " + JSON.stringify(request.body));
     var order = new SaleOrders({
         timeStamp: request.body.saleOrder.timeStamp,
         size: request.body.saleOrder.size,
@@ -111,11 +105,25 @@ app.put('/companies/:company_id', function(request, response){
 });
 
 app.delete('/buyOrders/:buyOrder_id', function(request, response){
-    //delete a buy order
+    console.log("delete a buy" + JSON.stringify(request.params));
+    BuyOrders.remove({
+        _id: request.params.buyOrder_id
+    }, function(error, buyOrder) {
+        if (error) response.send(error);
+        response.status(201).json({buyOrders: BuyOrders});
+    });
+
+
 });
 
-app.delete('/buyOrders/:saleOrder_id', function(request, response){
-    //delete a sell order
+app.delete('/saleOrders/:saleOrder_id', function(request, response){
+    console.log("delete a sale" + JSON.stringify(request.params));
+    SaleOrders.remove({
+        _id: request.params.saleOrder_id
+    }, function(error, saleOrder) {
+        if (error) response.send(error);
+        response.status(201).json({saleOrders: SaleOrders});
+    });
 });
 
 //app.get('/posts/:post_id', function (request, response) {
