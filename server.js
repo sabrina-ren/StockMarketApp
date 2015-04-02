@@ -14,16 +14,19 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-/*
-app.get('/', function (request, response) {
-    console.log("here");
-    response.render('./public/index');
+
+var companySchema = mongoose.Schema({
+    id: Number,
+    name: String,
+    openPrice: Number,
+    symbolURL: String
 });
 
+var Companies = mongoose.model('', companySchema)
 
-//app.get('/posts/:post_id', function (request, response) {
+app.get('/companies', function (request, response) {
 
-//});
+});
 
 
 /*
