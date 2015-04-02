@@ -21,7 +21,26 @@ var companiesSchema = mongoose.Schema({
     symbolURL: String
 });
 
+var ordersSchema = mongoose.Schema({
+    timeStamp: String,
+    size: Number,
+    price: Number,
+    company: String
+});
+
+var transactionSchema = mongoose.Schema({
+    timeStamp: String,
+    size: Number,
+    price: Number,
+    company: String
+});
+
+
 var Companies = mongoose.model('companies', companiesSchema);
+var BuyOrders = mongoose.model('buyorders', ordersSchema);
+var SaleOrders = mongoose.model('saleorders', ordersSchema);
+var Transactions = mongoose.model('transactions', transactionSchema);
+
 
 app.get('/companies', function (request, response) {
     Companies.find(function (error, docs) {
@@ -33,23 +52,54 @@ app.get('/companies', function (request, response) {
 });
 
 app.get('/buyOrders', function(request, response){
-    //get all the buy orders
+    BuyOrders.find(function (error, docs) {
+        if (error) response.send(error);
+        console.log("buyOrders: "+ docs);
+
+        response.json({buyOrders:docs});
+    });
 });
 
 app.get('/saleOrders', function(request, response){
-    //get all the sale orders
+    SaleOrders.find(function (error, docs) {
+        if (error) response.send(error);
+        console.log("saleOrders: "+ docs);
+
+        response.json({saleOrders:docs});
+    });
 });
 
 app.post('/companies', function(request, response){
     //create a company
 });
 
+
 app.post('/buyOrders', function(request, response){
-    //create a buy orders
+    console.log("get buy orders: " + JSON.stringify(request.body));
+    var order = new BuyOrders({
+        timeStamp: request.body.buyOrder.timeStamp,
+        size: request.body.buyOrder.size,
+        price: request.body.buyOrder.price,
+        company: request.body.buyOrder.company
+    });
+    order.save(function(error) {
+        if (error) response.send(error);
+        response.status(201).json({buyOrder: order});
+    });
 });
 
 app.post('/saleOrders', function(request, response){
-    //create a sell orders
+    console.log("get sale orders: " + JSON.stringify(request.body));
+    var order = new SaleOrders({
+        timeStamp: request.body.saleOrder.timeStamp,
+        size: request.body.saleOrder.size,
+        price: request.body.saleOrder.price,
+        company: request.body.saleOrder.company
+    });
+    order.save(function(error) {
+        if (error) response.send(error);
+        response.status(201).json({saleOrder: order});
+    });
 });
 
 app.post('/transactions', function(request, response){
