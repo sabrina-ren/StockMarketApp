@@ -1,5 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var Lock = require('lock');
+var lock = Lock();
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://sabsandconnor4lyfe:yaypassword@ds059471.mongolab.com:59471/networks2');
