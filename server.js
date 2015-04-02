@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var sem = require('semaphore')(1);
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://sabsandconnor4lyfe:yaypassword@ds059471.mongolab.com:59471/networks2');
@@ -43,11 +44,14 @@ var Transactions = mongoose.model('transactions', transactionSchema);
 
 
 app.get('/companies', function (request, response) {
-    Companies.find(function (error, docs) {
-        if (error) response.send(error);
-        console.log("companies: "+ docs);
+    sem.take(function() {
+        Companies.find(function (error, docs) {
+            if (error) response.send(error);
+            console.log("companies: "+ docs);
 
-        response.json({companies:docs});
+            response.json({companies:docs});
+        });
+        sem.leave();
     });
 });
 
@@ -102,6 +106,21 @@ app.post('/transactions', function(request, response){
 
 app.put('/companies/:company_id', function(request, response){
     //update a company with new info
+    Companies.findOne(
+        {_id: request.params.company_id}, function(error, company) {
+            if (error) response.send(error);
+
+            // Update every attribute
+            for (var key in request.body.company) {
+                company[key] = request.body.company[key];
+            }
+
+            company.save(function(error) {
+                if (error) response.send(error);
+                response.status(201).json({companies: company});
+            });
+        }
+    );
 });
 
 app.delete('/buyOrders/:buyOrder_id', function(request, response){
