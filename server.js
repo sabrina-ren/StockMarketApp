@@ -19,6 +19,12 @@ var companiesSchema = mongoose.Schema({
     id: Number,
     name: String,
     openPrice: Number,
+    currentPrice: Number,
+    changeValue: Number,
+    changeIcon: String,
+    changePercentage: Number,
+    changeDirection: Number,
+    shareVolume: Number,
     symbolURL: String
 });
 
@@ -70,7 +76,22 @@ app.get('/saleOrders', function(request, response){
 });
 
 app.post('/companies', function(request, response){
-    //create a company
+    // Create a company
+    sem.take(function() {
+        console.log('create company');
+        console.log(request.body);
+        var company = new Companies({
+            name: request.body.company.name,
+            openPrice: request.body.company.openPrice,
+            symbolURL: request.body.company.symbolURL
+        });
+        company.save(function(error) {
+            sem.leave();
+            if (error) response.send(error);
+            response.status(201).json({companies: company});
+        });
+    });
+
 });
 
 
@@ -105,22 +126,28 @@ app.post('/transactions', function(request, response){
 });
 
 app.put('/companies/:company_id', function(request, response){
-    //update a company with new info
-    Companies.findOne(
-        {_id: request.params.company_id}, function(error, company) {
-            if (error) response.send(error);
+    // Update a company with new info
+    sem.take(function() {
+        Companies.findOne(
+            {_id: request.params.company_id}, function(error, company) {
+                if (error) {
+                    sem.leave();
+                    response.send(error);
+                }
 
-            // Update every attribute
-            for (var key in request.body.company) {
-                company[key] = request.body.company[key];
+                // Update every attribute
+                for (var key in request.body.company) {
+                    company[key] = request.body.company[key];
+                }
+
+                company.save(function(error) {
+                    sem.leave();
+                    if (error) response.send(error);
+                    response.status(201).json({companies: company});
+                });
             }
-
-            company.save(function(error) {
-                if (error) response.send(error);
-                response.status(201).json({companies: company});
-            });
-        }
-    );
+        );
+    });
 });
 
 app.delete('/buyOrders/:buyOrder_id', function(request, response){
