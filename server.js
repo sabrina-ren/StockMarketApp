@@ -48,101 +48,166 @@ app.get('/companies', function (request, response) {
         Companies.find(function (error, docs) {
             if (error) response.send(error);
             console.log("companies: "+ docs);
-
+            sem.leave();
             response.json({companies:docs});
         });
-        sem.leave();
     });
 });
 
 app.get('/buyOrders', function(request, response){
-    BuyOrders.find(function (error, docs) {
-        if (error) response.send(error);
-        response.json({buyOrders:docs});
+    sem.take(function() {
+        BuyOrders.find(function (error, docs) {
+            if (error) {
+                sem.leave();
+                response.send(error);
+            }
+            sem.leave();
+            response.json({buyOrders:docs});
+        });
     });
 });
 
 app.get('/saleOrders', function(request, response){
-    SaleOrders.find(function (error, docs) {
-        if (error) response.send(error);
-        response.json({saleOrders:docs});
+    sem.take(function() {
+        SaleOrders.find(function (error, docs) {
+            if (error){
+                sem.leave();
+                response.send(error);
+            }
+            sem.leave();
+            response.json({saleOrders:docs});
+        });
     });
 });
 
 app.post('/companies', function(request, response){
     //create a company
+    sem.take(function() {
+
+        sem.leave();
+    });
 });
 
 
 app.post('/buyOrders', function(request, response){
-    var order = new BuyOrders({
-        timeStamp: request.body.buyOrder.timeStamp,
-        size: request.body.buyOrder.size,
-        price: request.body.buyOrder.price,
-        company: request.body.buyOrder.company
-    });
-    order.save(function(error) {
-        if (error) response.send(error);
-        response.status(201).json({buyOrder: order});
+    sem.take(function() {
+        var order = new BuyOrders({
+            timeStamp: request.body.buyOrder.timeStamp,
+            size: request.body.buyOrder.size,
+            price: request.body.buyOrder.price,
+            company: request.body.buyOrder.company
+        });
+        order.save(function(error) {
+            if (error){
+                sem.leave();
+                response.send(error);
+            }
+            sem.leave();
+            response.status(201).json({buyOrder: order});
+        });
     });
 });
 
 app.post('/saleOrders', function(request, response){
-    var order = new SaleOrders({
-        timeStamp: request.body.saleOrder.timeStamp,
-        size: request.body.saleOrder.size,
-        price: request.body.saleOrder.price,
-        company: request.body.saleOrder.company
-    });
-    order.save(function(error) {
-        if (error) response.send(error);
-        response.status(201).json({saleOrder: order});
+    sem.take(function() {
+        var order = new SaleOrders({
+            timeStamp: request.body.saleOrder.timeStamp,
+            size: request.body.saleOrder.size,
+            price: request.body.saleOrder.price,
+            company: request.body.saleOrder.company
+        });
+        order.save(function(error) {
+            if (error){
+                sem.leave();
+                response.send(error);
+            }
+            sem.leave();
+            response.status(201).json({saleOrder: order});
+        });
     });
 });
 
 app.post('/transactions', function(request, response){
     //create a transaction
+    sem.take(function() {
+
+        var transaction = new Transactions({
+            timeStamp: request.body.transaction.timeStamp,
+            size: request.body.transaction.size,
+            price: request.body.transaction.price,
+            company: request.body.transaction.company
+        });
+        transaction.save(function(error) {
+            if (error){
+                sem.leave();
+                response.send(error);
+            }
+            sem.leave();
+            response.status(201).json({transaction: transaction});
+        });
+    });
 });
 
 app.put('/companies/:company_id', function(request, response){
     //update a company with new info
-    Companies.findOne(
-        {_id: request.params.company_id}, function(error, company) {
-            if (error) response.send(error);
+    sem.take(function() {
+        Companies.findOne(
+            {_id: request.params.company_id}, function(error, company) {
+                if (error){
+                    sem.leave();
+                    response.send(error);
+                }
 
-            // Update every attribute
-            for (var key in request.body.company) {
-                company[key] = request.body.company[key];
+                // Update every attribute
+                for (var key in request.body.company) {
+                    company[key] = request.body.company[key];
+                }
+
+                company.save(function(error) {
+                    if (error){
+                        sem.leave();
+                        response.send(error);
+                    }
+                    sem.leave();
+                    response.status(201).json({companies: company});
+                });
             }
-
-            company.save(function(error) {
-                if (error) response.send(error);
-                response.status(201).json({companies: company});
-            });
-        }
-    );
+        );
+    });
 });
 
 app.delete('/buyOrders/:buyOrder_id', function(request, response){
-    console.log("delete a buy" + JSON.stringify(request.params));
-    BuyOrders.remove({
-        _id: request.params.buyOrder_id
-    }, function(error, buyOrder) {
-        if (error) response.send(error);
-        response.status(201).json({buyOrders: BuyOrders});
+    sem.take(function() {
+        console.log("delete a buy" + JSON.stringify(request.params));
+        BuyOrders.remove({
+            _id: request.params.buyOrder_id
+        }, function(error, buyOrder) {
+            if (error){
+                sem.leave();
+                response.send(error);
+            }
+            sem.leave();
+            response.status(201).json({buyOrders: BuyOrders});
+        });
     });
-
-
 });
 
 app.delete('/saleOrders/:saleOrder_id', function(request, response){
-    console.log("delete a sale" + JSON.stringify(request.params));
-    SaleOrders.remove({
-        _id: request.params.saleOrder_id
-    }, function(error, saleOrder) {
-        if (error) response.send(error);
-        response.status(201).json({saleOrders: SaleOrders});
+    sem.take(function() {
+        console.log("delete a sale" + JSON.stringify(request.params));
+        SaleOrders.remove({
+            _id: request.params.saleOrder_id
+        }, function(error, saleOrder) {
+            if (error){
+                response.send(error);
+                sem.leave();
+            }
+            sem.leave();
+            response.status(201).json({saleOrders: SaleOrders});
+        });
     });
+
+
 });
 
 //app.get('/posts/:post_id', function (request, response) {
