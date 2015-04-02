@@ -19,6 +19,12 @@ var companiesSchema = mongoose.Schema({
     id: Number,
     name: String,
     openPrice: Number,
+    currentPrice: Number,
+    changeValue: Number,
+    changeIcon: String,
+    changePercentage: Number,
+    changeDirection: Number,
+    shareVolume: Number,
     symbolURL: String
 });
 
@@ -81,11 +87,30 @@ app.get('/saleOrders', function(request, response){
 });
 
 app.post('/companies', function(request, response){
+<<<<<<< HEAD
     //create a company
     sem.take(function() {
 
         sem.leave();
     });
+=======
+    // Create a company
+    sem.take(function() {
+        console.log('create company');
+        console.log(request.body);
+        var company = new Companies({
+            name: request.body.company.name,
+            openPrice: request.body.company.openPrice,
+            symbolURL: request.body.company.symbolURL
+        });
+        company.save(function(error) {
+            sem.leave();
+            if (error) response.send(error);
+            response.status(201).json({companies: company});
+        });
+    });
+
+>>>>>>> 9769bcfe88cd35be8dc425cb9bc7f8d4c38b3a70
 });
 
 
