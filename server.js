@@ -1,7 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var Lock = require('lock');
-var lock = Lock();
+var sem = require('semaphore')(1);
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://sabsandconnor4lyfe:yaypassword@ds059471.mongolab.com:59471/networks2');
@@ -26,11 +25,14 @@ var companiesSchema = mongoose.Schema({
 var Companies = mongoose.model('companies', companiesSchema);
 
 app.get('/companies', function (request, response) {
-    Companies.find(function (error, docs) {
-        if (error) response.send(error);
-        console.log("companies: "+ docs);
+    sem.take(function() {
+        Companies.find(function (error, docs) {
+            if (error) response.send(error);
+            console.log("companies: "+ docs);
 
-        response.json({companies:docs});
+            response.json({companies:docs});
+        });
+        sem.leave();
     });
 });
 
