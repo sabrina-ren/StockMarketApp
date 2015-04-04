@@ -1,10 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var sem = require('semaphore')(1);
+var sem = require('semaphore')(1); // Only one client is allowed to access semaphore at one time
 
+// Set up Mongodb
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://sabsandconnor4lyfe:yaypassword@ds059471.mongolab.com:59471/networks2');
 
+// Set up app
 var app = express();
 
 var logger = require('./logger');
@@ -15,6 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// Mongoose Schemas
 var companiesSchema = mongoose.Schema({
     id: Number,
     name: String,
@@ -28,6 +31,7 @@ var companiesSchema = mongoose.Schema({
     symbolURL: String
 });
 
+// Orders schema will be used for both buy orders and sale orders
 var ordersSchema = mongoose.Schema({
     timeStamp: String,
     size: Number,
@@ -42,69 +46,64 @@ var transactionSchema = mongoose.Schema({
     company: String
 });
 
-
 var Companies = mongoose.model('companies', companiesSchema);
 var BuyOrders = mongoose.model('buyorders', ordersSchema);
 var SaleOrders = mongoose.model('saleorders', ordersSchema);
 var Transactions = mongoose.model('transactions', transactionSchema);
 
+// HTTP request handling
 
+//  Return all companies
 app.get('/companies', function (request, response) {
     sem.take(function() {
         Companies.find(function (error, docs) {
-            if (error) response.send(error);
-            console.log("companies: "+ docs);
             sem.leave();
+            if (error) response.send(error);
             response.json({companies:docs});
         });
     });
 });
 
+// Return all buy orders
 app.get('/buyOrders', function(request, response){
     sem.take(function() {
         BuyOrders.find(function (error, docs) {
-            if (error) {
-                sem.leave();
-                response.send(error);
-            }
             sem.leave();
+            if (error) response.send(error);
             response.json({buyOrders:docs});
         });
     });
 });
 
+// Return all sale orders
 app.get('/saleOrders', function(request, response){
     sem.take(function() {
         SaleOrders.find(function (error, docs) {
-            if (error){
-                sem.leave();
-                response.send(error);
-            }
             sem.leave();
+            if (error) response.send(error);
             response.json({saleOrders:docs});
         });
     });
 });
 
+// Create a company
 app.post('/companies', function(request, response){
-    // Create a company
     sem.take(function() {
-        console.log('create company');
-        console.log(request.body);
+        // Create company with name, openPrice, and symbolURL since stockStateSummary.js creates records with only these three attributes
         var company = new Companies({
             name: request.body.company.name,
             openPrice: request.body.company.openPrice,
             symbolURL: request.body.company.symbolURL
         });
         company.save(function(error) {
-            sem.leave();
+            sem.leave();    // Leave semaphore after last request
             if (error) response.send(error);
             response.status(201).json({companies: company});
         });
     });
 });
 
-
+// Create a buy order
 app.post('/buyOrders', function(request, response){
     sem.take(function() {
         var order = new BuyOrders({
@@ -114,16 +113,14 @@ app.post('/buyOrders', function(request, response){
             company: request.body.buyOrder.company
         });
         order.save(function(error) {
-            if (error){
-                sem.leave();
-                response.send(error);
-            }
-            sem.leave();
+            sem.leave();    // Leave semaphore after last request
+            if (error) response.send(error);
             response.status(201).json({buyOrder: order});
         });
     });
 });
 
+// Create a sale order
 app.post('/saleOrders', function(request, response){
     sem.take(function() {
         var order = new SaleOrders({
@@ -133,20 +130,16 @@ app.post('/saleOrders', function(request, response){
             company: request.body.saleOrder.company
         });
         order.save(function(error) {
-            if (error){
-                sem.leave();
-                response.send(error);
-            }
             sem.leave();
+            if (error) response.send(error);
             response.status(201).json({saleOrder: order});
         });
     });
 });
 
+// Create a transaction
 app.post('/transactions', function(request, response){
-    //create a transaction
     sem.take(function() {
-
         var transaction = new Transactions({
             timeStamp: request.body.transaction.timeStamp,
             size: request.body.transaction.size,
@@ -154,19 +147,17 @@ app.post('/transactions', function(request, response){
             company: request.body.transaction.company
         });
         transaction.save(function(error) {
-            if (error){
-                sem.leave();
-                response.send(error);
-            }
             sem.leave();
+            if (error) response.send(error);
             response.status(201).json({transaction: transaction});
         });
     });
 });
 
+// Update a company with new info
 app.put('/companies/:company_id', function(request, response){
-    //update a company with new info
     sem.take(function() {
+        // Find company to update
         Companies.findOne(
             {_id: request.params.company_id}, function(error, company) {
                 if (error){
@@ -180,11 +171,8 @@ app.put('/companies/:company_id', function(request, response){
                 }
 
                 company.save(function(error) {
-                    if (error){
-                        sem.leave();
-                        response.send(error);
-                    }
                     sem.leave();
+                    if (error) response.send(error);
                     response.status(201).json({companies: company});
                 });
             }
@@ -192,105 +180,34 @@ app.put('/companies/:company_id', function(request, response){
     });
 });
 
+// Delete a buy order
 app.delete('/buyOrders/:buyOrder_id', function(request, response){
     sem.take(function() {
-        console.log("delete a buy" + JSON.stringify(request.params));
         BuyOrders.remove({
             _id: request.params.buyOrder_id
         }, function(error, buyOrder) {
-            if (error){
-                sem.leave();
-                response.send(error);
-            }
             sem.leave();
+            if (error) response.send(error);
             response.status(201).json({buyOrders: BuyOrders});
         });
     });
 });
 
+// Delete a sale order
 app.delete('/saleOrders/:saleOrder_id', function(request, response){
     sem.take(function() {
         console.log("delete a sale" + JSON.stringify(request.params));
         SaleOrders.remove({
             _id: request.params.saleOrder_id
         }, function(error, saleOrder) {
-            if (error){
-                response.send(error);
-                sem.leave();
-            }
             sem.leave();
+            if (error) response.send(error);
             response.status(201).json({saleOrders: SaleOrders});
         });
     });
 
 
 });
-
-//app.get('/posts/:post_id', function (request, response) {
-
-//});
-
-
-/*
- var postsSchema = mongoose.Schema({
- title: String,
- body: String
- });
-
- var Posts = mongoose.model('Posts', postsSchema);
-
- app.get('/posts', function (request, response) {
- Posts.find(function (error, posts) {
- if (error) response.send(error);
- response.json({posts: posts});
- });
- });
-
- app.get('/posts/:post_id', function (request, response) {
- Posts.findById(request.params.post_id, function (error, post) {
- if (error) response.send(error);
- response.json({posts: post});
- });
- });
-
- app.post('/posts', function (request, response) {
- var post = new Posts({
- title: request.body.post.title,
- body: request.body.post.body
- });
- post.save(function(error) {
- if (error) response.send(error);
- response.status(201).json({posts: post});
- });
- });
-
- app.put('/posts/:post_id', function (request, response) {
- // use our Posts model to find the post we want
- Posts.findById(request.params.post_id, function (error, post) {
- if (error) response.send(error);
-
- // update the post info
- post.title = request.body.post.title,
- post.body = request.body.post.body
-
- // save the post
- post.save(function (error) {
- if (error) response.send(error);
- response.status(201).json({posts: post});
- });
- });
- });
-
- app.delete('/posts/:post_id', function (request, response) {
- Posts.remove({
- _id: request.params.post_id
- }, function(error, post) {
- if (error) response.send(err);
- response.status(201).json({posts: Posts});
- });
-
- });
- */
 
 app.listen(3700, function () {
     console.log('Listening on port 3700');
